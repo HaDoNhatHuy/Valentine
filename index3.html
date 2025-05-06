@@ -1,51 +1,914 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Valentine's Day Flip Book</title>
-    <link rel="stylesheet" href="./style3.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Pacifico&family=Be+Vietnam+Pro:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #ffdde1, #fae1dd, #ee9ca7);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        overflow-x: hidden;
+        font-family: "Be Vietnam Pro", sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* Lớp trang trí */
+      .decoration {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+
+      .floating-hearts {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+
+      .floating-heart {
+        position: absolute;
+        background-color: rgba(255, 105, 180, 0.2);
+        transform: rotate(-45deg);
+        animation: float linear infinite;
+      }
+
+      .floating-heart:before,
+      .floating-heart:after {
+        content: "";
+        position: absolute;
+        background-color: rgba(255, 105, 180, 0.2);
+        border-radius: 50%;
+      }
+
+      .floating-heart:before {
+        top: -50%;
+      }
+
+      .floating-heart:after {
+        left: 50%;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(-100%) translateX(-50%) rotate(-45deg) scale(1);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) translateX(50%) rotate(-45deg) scale(1);
+          opacity: 0;
+        }
+      }
+
+      /* Tiêu đề với hiệu ứng */
+      #headline-container {
+        position: relative;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 30px;
+        margin-bottom: 40px;
+        z-index: 10;
+      }
+
+      #shine {
+        font-family: "Pacifico", cursive;
+        font-size: 3.5rem;
+        position: relative;
+        color: #ff3366;
+        text-shadow: 0 0 5px rgba(255, 51, 102, 0.5),
+          0 0 10px rgba(255, 51, 102, 0.3), 0 0 15px rgba(255, 51, 102, 0.2);
+        animation: pulse-title 3s infinite;
+      }
+
+      @keyframes pulse-title {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      #shine:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.8) 50%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        animation: shine-effect 5s infinite;
+      }
+
+      @keyframes shine-effect {
+        0% {
+          left: -100%;
+          width: 100%;
+        }
+        14%,
+        100% {
+          left: 100%;
+          width: 100%;
+        }
+      }
+
+      /* Gallery nâng cấp */
+      .gallery-container {
+        position: relative;
+        width: 85%;
+        max-width: 800px;
+        margin: 0 auto;
+        perspective: 1000px;
+        z-index: 10;
+      }
+
+      .gallery {
+        --d: 10s; /* duration */
+        position: relative;
+        width: 100%;
+        height: 400px;
+        transform-style: preserve-3d;
+      }
+
+      .gallery > img {
+        position: absolute;
+        width: 60%;
+        max-width: 300px;
+        aspect-ratio: 1;
+        object-fit: cover;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        border: 10px solid white;
+        border-radius: 5px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        transform-origin: center;
+        transform-style: preserve-3d;
+        backface-visibility: hidden;
+        transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        animation: slide var(--d) infinite cubic-bezier(0.4, 0, 0.2, 1),
+          z-order var(--d) infinite steps(1);
+      }
+
+      .gallery img:nth-child(odd) {
+        transform: rotate(var(--r)) translateZ(10px);
+      }
+
+      .gallery img:nth-child(even) {
+        transform: rotate(calc(-1 * var(--r))) translateZ(10px);
+      }
+
+      .gallery > img:last-child {
+        animation-name: slide, z-order-last;
+      }
+
+      .gallery > img:hover {
+        animation-play-state: paused;
+        transform: scale(1.1) translateZ(30px) rotate(0deg) !important;
+        z-index: 100 !important;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      }
+
+      .gallery > img:nth-child(1) {
+        animation-delay: calc(0 * var(--d));
+        --r: 12deg;
+      }
+
+      .gallery > img:nth-child(2) {
+        animation-delay: calc(-0.125 * var(--d));
+        --r: -5deg;
+      }
+
+      .gallery > img:nth-child(3) {
+        animation-delay: calc(-0.25 * var(--d));
+        --r: -16deg;
+      }
+
+      .gallery > img:nth-child(4) {
+        animation-delay: calc(-0.375 * var(--d));
+        --r: 8deg;
+      }
+
+      .gallery > img:nth-child(5) {
+        animation-delay: calc(-0.5 * var(--d));
+        --r: -10deg;
+      }
+
+      .gallery > img:nth-child(6) {
+        animation-delay: calc(-0.625 * var(--d));
+        --r: 14deg;
+      }
+
+      .gallery > img:nth-child(7) {
+        animation-delay: calc(-0.75 * var(--d));
+        --r: -12deg;
+      }
+
+      .gallery > img:nth-child(8) {
+        animation-delay: calc(-0.875 * var(--d));
+        --r: 6deg;
+      }
+
+      @keyframes slide {
+        0%,
+        10% {
+          transform: translateX(-120%) rotate(var(--r));
+          opacity: 0;
+        }
+        15% {
+          opacity: 1;
+        }
+        20%,
+        90% {
+          transform: translateX(0%) rotate(var(--r));
+          opacity: 1;
+        }
+        95% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateX(120%) rotate(var(--r));
+          opacity: 0;
+        }
+      }
+
+      @keyframes z-order {
+        0%,
+        20% {
+          z-index: 8;
+        }
+        20.001%,
+        40% {
+          z-index: 7;
+        }
+        40.001%,
+        60% {
+          z-index: 6;
+        }
+        60.001%,
+        80% {
+          z-index: 5;
+        }
+        80.001%,
+        100% {
+          z-index: 4;
+        }
+      }
+
+      @keyframes z-order-last {
+        0%,
+        20% {
+          z-index: 1;
+        }
+        20.001%,
+        40% {
+          z-index: 2;
+        }
+        40.001%,
+        60% {
+          z-index: 3;
+        }
+        60.001%,
+        80% {
+          z-index: 4;
+        }
+        80.001%,
+        100% {
+          z-index: 8;
+        }
+      }
+
+      /* Phần điều khiển nhạc */
+      .music-controller {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(255, 255, 255, 0.9);
+        padding: 15px 30px;
+        border-radius: 50px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        z-index: 100;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease;
+      }
+
+      .music-controller:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        transform: translateX(-50%) translateY(-5px);
+      }
+
+      .music-button {
+        background: linear-gradient(135deg, #ff69b4, #ff1493);
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 3px 10px rgba(255, 105, 180, 0.4);
+        transition: all 0.3s ease;
+      }
+
+      .music-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 5px 15px rgba(255, 105, 180, 0.6);
+      }
+
+      .music-button i {
+        font-size: 18px;
+      }
+
+      .song-info {
+        display: flex;
+        flex-direction: column;
+        color: #333;
+      }
+
+      .song-title {
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      .song-artist {
+        font-size: 14px;
+        opacity: 0.8;
+      }
+
+      .volume-control {
+        width: 80px;
+        height: 5px;
+        background: #f0f0f0;
+        border-radius: 5px;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .volume-progress {
+        position: absolute;
+        height: 100%;
+        width: 50%;
+        background: linear-gradient(90deg, #ff69b4, #ff1493);
+        border-radius: 5px;
+      }
+
+      .volume-handle {
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        background: white;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease;
+      }
+
+      .volume-control:hover .volume-handle {
+        transform: translate(-50%, -50%) scale(1.2);
+      }
+
+      /* Nút quay lại */
+      .back-button {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #ff69b4, #ff1493);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 30px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+        transition: all 0.3s ease;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .back-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 105, 180, 0.6);
+      }
+
+      .back-button:active {
+        transform: translateY(0);
+      }
+
+      /* Hiệu ứng tim */
+      .heart-icon {
+        display: inline-block;
+        color: #ff3366;
+        margin: 0 5px;
+        animation: heart-beat 1.5s infinite;
+      }
+
+      @keyframes heart-beat {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.3);
+        }
+      }
+
+      /* Lời nhắn */
+      .message-container {
+        position: relative;
+        max-width: 600px;
+        width: 90%;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 30px auto;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px);
+        z-index: 10;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        transform: translateY(20px);
+        opacity: 0;
+        animation: fade-in 1s forwards;
+        animation-delay: 1s;
+      }
+
+      @keyframes fade-in {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .message-text {
+        font-family: "Dancing Script", cursive;
+        font-size: 1.8rem;
+        color: #333;
+        line-height: 1.5;
+        margin-bottom: 15px;
+      }
+
+      .signature {
+        font-family: "Dancing Script", cursive;
+        font-size: 1.5rem;
+        color: #ff3366;
+        text-align: right;
+        margin-top: 15px;
+      }
+
+      /* Hiệu ứng confetti */
+      .confetti-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        opacity: 0.7;
+        animation: confetti-fall linear forwards;
+      }
+
+      @keyframes confetti-fall {
+        0% {
+          transform: translateY(-100px) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* Responsive design */
+      @media only screen and (max-width: 768px) {
+        #shine {
+          font-size: 2.5rem;
+        }
+
+        .gallery {
+          height: 300px;
+        }
+
+        .gallery > img {
+          width: 70%;
+        }
+
+        .music-controller {
+          padding: 10px 20px;
+          gap: 10px;
+        }
+
+        .volume-control {
+          width: 60px;
+        }
+
+        .song-title {
+          font-size: 14px;
+        }
+
+        .song-artist {
+          font-size: 12px;
+        }
+
+        .message-text {
+          font-size: 1.5rem;
+        }
+
+        .signature {
+          font-size: 1.3rem;
+        }
+      }
+
+      @media only screen and (max-width: 480px) {
+        #shine {
+          font-size: 1.8rem;
+        }
+
+        #headline-container {
+          margin-top: 60px;
+        }
+
+        .gallery {
+          height: 250px;
+        }
+
+        .gallery > img {
+          width: 85%;
+          border-width: 5px;
+        }
+
+        .music-controller {
+          padding: 8px 15px;
+          gap: 8px;
+        }
+
+        .music-button {
+          width: 35px;
+          height: 35px;
+        }
+
+        .volume-control {
+          width: 50px;
+        }
+
+        .song-title {
+          font-size: 12px;
+        }
+
+        .song-artist {
+          font-size: 10px;
+        }
+
+        .message-text {
+          font-size: 1.2rem;
+        }
+
+        .signature {
+          font-size: 1.1rem;
+        }
+
+        .back-button {
+          padding: 8px 15px;
+          font-size: 14px;
+        }
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
   </head>
   <body>
-    <div id="hedlinecontainer">
-      <div id="shine">Happy Valentine's Day💞</div>
+    <!-- Các lớp trang trí -->
+    <div class="decoration">
+      <div class="floating-hearts"></div>
     </div>
 
-    <div class="gallery">
-      <img src="./file/anh1.jpg" alt="anh1" />
-      <img src="./file/anh2.jpg" alt="anh2" />
-      <img src="./file/anh3.jpg" alt="anh3" />
-      <img src="./file/anh4.jpg" alt="anh4" />
-      <img src="./file/anh5.jpg" alt="anh5" />
-      <img src="./file/anh6.jpg" alt="anh6" />
-      <img src="./file/anh7.jpg" alt="anh7" />
-      <img src="./file/anh8.jpg" alt="anh8" />
+    <div class="confetti-container"></div>
+
+    <!-- Nút quay lại -->
+    <button class="back-button" onclick="window.location.href='index.html'">
+      <i class="fas fa-arrow-left"></i> Quay lại
+    </button>
+
+    <!-- Tiêu đề -->
+    <div id="headline-container">
+      <div id="shine">
+        Happy Valentine's Day <span class="heart-icon">💞</span>
+      </div>
     </div>
+
+    <!-- Lời nhắn -->
+    <div class="message-container">
+      <div class="message-text">
+        Gửi đến em những khoảnh khắc đẹp nhất của chúng mình. Cảm ơn em đã luôn
+        bên anh.
+      </div>
+      <div class="signature">Yêu em rất nhiều!</div>
+    </div>
+
+    <!-- Gallery hình ảnh -->
+    <div class="gallery-container">
+      <div class="gallery">
+        <img src="./file/anh1.jpg" alt="anh1" />
+        <img src="./file/anh2.jpg" alt="anh2" />
+        <img src="./file/anh3.jpg" alt="anh3" />
+        <img src="./file/anh4.jpg" alt="anh4" />
+        <img src="./file/anh5.jpg" alt="anh5" />
+        <img src="./file/anh6.jpg" alt="anh6" />
+        <img src="./file/anh7.jpg" alt="anh7" />
+        <img src="./file/anh8.jpg" alt="anh8" />
+      </div>
+    </div>
+
+    <!-- Điều khiển nhạc -->
+    <div class="music-controller">
+      <button class="music-button" id="play-pause-button">
+        <i class="fas fa-play" id="play-icon"></i>
+      </button>
+      <div class="song-info">
+        <span class="song-title">Một Đời Yêu Em</span>
+        <span class="song-artist">Bảo Anh</span>
+      </div>
+      <div class="volume-control">
+        <div class="volume-progress"></div>
+        <div class="volume-handle"></div>
+      </div>
+    </div>
+
+    <!-- Âm thanh -->
     <audio id="background-music" loop>
       <source src="file/motdoi.mp3" type="audio/mpeg" />
     </audio>
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
+        // Tạo trái tim nổi
+        createFloatingHearts();
+
+        // Tạo confetti
+        createConfetti();
+
+        // Xử lý âm nhạc
+        setupMusicController();
+
+        // Khởi động âm nhạc nếu cần
         let urlParams = new URLSearchParams(window.location.search);
-        let shouldPlay = urlParams.get("play"); // Kiểm tra tham số trên URL
-        let audio = document.getElementById("background-music");
-        audio.volume = 0.5; // Giảm âm lượng
+        let shouldPlay = urlParams.get("play");
 
         if (shouldPlay === "true") {
-          audio.play().catch((error) => {
-            console.log("Trình duyệt chặn autoplay, cần tương tác!");
-          });
-
-          // Thêm sự kiện click để đảm bảo nhạc được phát khi người dùng tương tác
-          document.addEventListener(
-            "click",
-            function () {
-              audio.play();
-            },
-            { once: true }
-          );
+          setTimeout(() => {
+            playMusic();
+          }, 500);
         }
+      });
+
+      // Tạo trái tim bay lơ lửng
+      function createFloatingHearts() {
+        const container = document.querySelector(".floating-hearts");
+        const heartCount = 20;
+
+        for (let i = 0; i < heartCount; i++) {
+          const heart = document.createElement("div");
+          heart.classList.add("floating-heart");
+
+          // Random size
+          const size = Math.random() * 15 + 10;
+          heart.style.width = `${size}px`;
+          heart.style.height = `${size}px`;
+
+          // Set pseudo-element sizes
+          heart.style.setProperty("--size", `${size}px`);
+
+          // Random position
+          heart.style.left = `${Math.random() * 100}%`;
+
+          // Random color
+          const hue = Math.floor(Math.random() * 30) + 340;
+          const saturation = Math.floor(Math.random() * 30) + 70;
+          const lightness = Math.floor(Math.random() * 20) + 50;
+          const alpha = Math.random() * 0.3 + 0.1;
+          const color = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+
+          heart.style.backgroundColor = color;
+
+          // Cài đặt màu cho ::before và ::after
+          const style = document.createElement("style");
+          style.textContent = `
+          .floating-heart:nth-child(${i + 1}):before,
+          .floating-heart:nth-child(${i + 1}):after {
+            background-color: ${color};
+          }
+        `;
+          document.head.appendChild(style);
+
+          // Random duration and delay
+          const duration = Math.random() * 20 + 15;
+          heart.style.animationDuration = `${duration}s`;
+          heart.style.animationDelay = `${Math.random() * 10}s`;
+
+          container.appendChild(heart);
+        }
+      }
+
+      // Tạo hiệu ứng confetti
+      function createConfetti() {
+        const container = document.querySelector(".confetti-container");
+        const confettiCount = 100;
+        const colors = [
+          "#ff69b4",
+          "#ffd700",
+          "#87cefa",
+          "#7fffd4",
+          "#dda0dd",
+          "#ff6347",
+        ];
+
+        for (let i = 0; i < confettiCount; i++) {
+          const confetti = document.createElement("div");
+          confetti.classList.add("confetti");
+
+          // Random confetti style
+          const shape = Math.random() > 0.5 ? "circle" : "rectangle";
+
+          if (shape === "circle") {
+            confetti.style.borderRadius = "50%";
+          } else {
+            confetti.style.width = `${Math.random() * 7 + 5}px`;
+            confetti.style.height = `${Math.random() * 15 + 5}px`;
+          }
+
+          // Random position
+          confetti.style.left = `${Math.random() * 100}%`;
+
+          // Random color
+          confetti.style.backgroundColor =
+            colors[Math.floor(Math.random() * colors.length)];
+
+          // Random animation duration and delay
+          const duration = Math.random() * 5 + 8;
+          confetti.style.animationDuration = `${duration}s`;
+          confetti.style.animationDelay = `${Math.random() * 12}s`;
+
+          container.appendChild(confetti);
+        }
+      }
+
+      // Thiết lập điều khiển nhạc
+      function setupMusicController() {
+        const audio = document.getElementById("background-music");
+        const playPauseButton = document.getElementById("play-pause-button");
+        const playIcon = document.getElementById("play-icon");
+        const volumeControl = document.querySelector(".volume-control");
+        const volumeProgress = document.querySelector(".volume-progress");
+        const volumeHandle = document.querySelector(".volume-handle");
+
+        // Thiết lập âm lượng mặc định
+        audio.volume = 0.5;
+
+        // Nút play/pause
+        playPauseButton.addEventListener("click", function () {
+          if (audio.paused) {
+            playMusic();
+          } else {
+            pauseMusic();
+          }
+        });
+
+        // Xử lý điều chỉnh âm lượng
+        volumeControl.addEventListener("click", function (e) {
+          const rect = volumeControl.getBoundingClientRect();
+          const position = (e.clientX - rect.left) / rect.width;
+          setVolume(position);
+        });
+
+        // Cập nhật hiển thị âm lượng
+        function updateVolumeDisplay() {
+          volumeProgress.style.width = `${audio.volume * 100}%`;
+          volumeHandle.style.left = `${audio.volume * 100}%`;
+        }
+
+        // Thiết lập âm lượng
+        function setVolume(value) {
+          const volume = Math.max(0, Math.min(1, value));
+          audio.volume = volume;
+          updateVolumeDisplay();
+        }
+
+        // Cập nhật hiển thị ban đầu
+        updateVolumeDisplay();
+
+        // Xử lý lỗi phát nhạc
+        audio.addEventListener("error", function () {
+          console.error("Lỗi khi phát nhạc!");
+          playIcon.className = "fas fa-exclamation-triangle";
+        });
+      }
+
+      // Phát nhạc
+      function playMusic() {
+        const audio = document.getElementById("background-music");
+        const playIcon = document.getElementById("play-icon");
+
+        audio
+          .play()
+          .then(() => {
+            playIcon.className = "fas fa-pause";
+          })
+          .catch((error) => {
+            console.log("Trình duyệt chặn autoplay, cần tương tác:", error);
+            playIcon.className = "fas fa-play";
+          });
+      }
+
+      // Tạm dừng nhạc
+      function pauseMusic() {
+        const audio = document.getElementById("background-music");
+        const playIcon = document.getElementById("play-icon");
+
+        audio.pause();
+        playIcon.className = "fas fa-play";
+      }
+
+      // Listen for clicks anywhere on the document to start audio (browser autoplay policy workaround)
+      document.addEventListener("click", function initiateAudio() {
+        const audio = document.getElementById("background-music");
+        let urlParams = new URLSearchParams(window.location.search);
+        let shouldPlay = urlParams.get("play");
+
+        if (shouldPlay === "true" && audio.paused) {
+          playMusic();
+        }
+
+        // Remove this event listener after first click
+        document.removeEventListener("click", initiateAudio);
       });
     </script>
   </body>

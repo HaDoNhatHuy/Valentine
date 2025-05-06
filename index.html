@@ -1,40 +1,882 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Valentine 14/2</title>
-    <link rel="stylesheet" href="./style2.css">
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Be+Vietnam+Pro:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #ffdde1, #fae1dd, #ee9ca7);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        font-family: "Be Vietnam Pro", sans-serif;
+        overflow: hidden;
+        position: relative;
+      }
+
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .falling-hearts {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .falling-heart {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: rgba(255, 105, 180, 0.6);
+        transform: rotate(-45deg);
+        animation: fall linear infinite;
+      }
+
+      .falling-heart:before,
+      .falling-heart:after {
+        content: "";
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: rgba(255, 105, 180, 0.6);
+        border-radius: 50%;
+      }
+
+      .falling-heart:before {
+        top: -5px;
+      }
+
+      .falling-heart:after {
+        left: 5px;
+      }
+
+      @keyframes fall {
+        0% {
+          transform: translateY(-100px) translateX(0) rotate(-45deg) scale(0.6);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) translateX(100px) rotate(-45deg)
+            scale(0.6);
+          opacity: 0;
+        }
+      }
+
+      .container {
+        position: relative;
+        z-index: 10;
+        perspective: 1000px;
+        transform-style: preserve-3d;
+        transition: transform 0.5s;
+        margin-top: 20px;
+      }
+
+      .valentines {
+        position: relative;
+        cursor: pointer;
+        animation: float 5s ease-in-out infinite;
+        transform-style: preserve-3d;
+        filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.15));
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0) rotate(0deg);
+        }
+        25% {
+          transform: translateY(-20px) rotate(2deg);
+        }
+        50% {
+          transform: translateY(0) rotate(0deg);
+        }
+        75% {
+          transform: translateY(-10px) rotate(-2deg);
+        }
+      }
+
+      .envelope {
+        position: relative;
+        width: 300px;
+        height: 200px;
+        background: linear-gradient(135deg, #f08080, #ff7676);
+        border-radius: 5px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+      }
+
+      .envelope:before {
+        background: linear-gradient(315deg, #f08080, #ff7676);
+        content: "";
+        position: absolute;
+        width: 212px;
+        height: 212px;
+        transform: rotate(45deg);
+        top: -105px;
+        left: 44px;
+        border-radius: 30px 0 0 0;
+        z-index: 2;
+      }
+
+      .card {
+        position: absolute;
+        background: linear-gradient(to bottom, #fffdf6, #eae2b7);
+        width: 270px;
+        height: 170px;
+        top: 5px;
+        left: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 4;
+        overflow: hidden;
+      }
+
+      .card:before {
+        content: "";
+        position: absolute;
+        border: 2px solid #003049;
+        border-style: dotted;
+        width: 240px;
+        height: 140px;
+        left: 12px;
+        top: 12px;
+        border-radius: 3px;
+      }
+
+      .sparkles {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      .sparkle {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background-color: #fff;
+        border-radius: 50%;
+        opacity: 0;
+        animation: sparkle 2s linear infinite;
+      }
+
+      @keyframes sparkle {
+        0% {
+          transform: scale(0);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(0);
+          opacity: 0;
+        }
+      }
+
+      .text {
+        position: absolute;
+        font-family: "Dancing Script", cursive;
+        font-size: 32px;
+        text-align: center;
+        line-height: 30px;
+        width: 100%;
+        top: 18px;
+        color: #003049;
+        z-index: 5;
+        transform: translateY(0);
+        transition: all 0.4s ease;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .heart {
+        background-color: #d62828;
+        display: inline-block;
+        height: 30px;
+        margin: 0 10px;
+        position: relative;
+        top: 110px;
+        left: 105px;
+        transform: rotate(-45deg);
+        width: 30px;
+        filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.2));
+        animation: pulse 1.5s ease-in-out infinite;
+        z-index: 5;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: rotate(-45deg) scale(1);
+        }
+        50% {
+          transform: rotate(-45deg) scale(1.2);
+        }
+        100% {
+          transform: rotate(-45deg) scale(1);
+        }
+      }
+
+      .heart:before,
+      .heart:after {
+        content: "";
+        background-color: #d62828;
+        border-radius: 50%;
+        height: 30px;
+        width: 30px;
+        position: absolute;
+      }
+
+      .heart:before {
+        top: -15px;
+        left: 0;
+      }
+
+      .heart:after {
+        left: 15px;
+        top: 0;
+      }
+
+      .hearts {
+        position: absolute;
+        top: 15px;
+        z-index: 3;
+      }
+
+      @keyframes heart-float {
+        0% {
+          transform: translateY(0) rotate(-45deg) scale(0.3);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-180px) rotate(-45deg) scale(1.3);
+          opacity: 0;
+        }
+      }
+
+      .one,
+      .two,
+      .three,
+      .four,
+      .five {
+        background-color: #ff5e78;
+        display: inline-block;
+        height: 10px;
+        width: 10px;
+        margin: 0 10px;
+        position: relative;
+        transform: rotate(-45deg);
+        top: 50px;
+        filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.2));
+      }
+
+      .one:before,
+      .one:after,
+      .two:before,
+      .two:after,
+      .three:before,
+      .three:after,
+      .four:before,
+      .four:after,
+      .five:before,
+      .five:after {
+        content: "";
+        background-color: #ff5e78;
+        border-radius: 50%;
+        height: 10px;
+        width: 10px;
+        position: absolute;
+      }
+
+      .one:before,
+      .two:before,
+      .three:before,
+      .four:before,
+      .five:before {
+        top: -5px;
+        left: 0;
+      }
+
+      .one:after,
+      .two:after,
+      .three:after,
+      .four:after,
+      .five:after {
+        left: 5px;
+        top: 0;
+      }
+
+      .one {
+        left: 10px;
+        animation: heart-float 3s ease-out infinite;
+      }
+
+      .two {
+        left: 30px;
+        animation: heart-float 2.5s ease-out infinite;
+        animation-delay: 0.2s;
+      }
+
+      .three {
+        left: 50px;
+        animation: heart-float 3.5s ease-out infinite;
+        animation-delay: 0.5s;
+      }
+
+      .four {
+        left: 70px;
+        animation: heart-float 2.8s ease-out infinite;
+        animation-delay: 0.7s;
+      }
+
+      .five {
+        left: 90px;
+        animation: heart-float 3.2s ease-out infinite;
+        animation-delay: 1s;
+      }
+
+      .front {
+        position: absolute;
+        border-right: 180px solid #f4978e;
+        border-top: 95px solid transparent;
+        border-bottom: 100px solid transparent;
+        left: 120px;
+        top: 5px;
+        width: 0;
+        height: 0;
+        z-index: 6;
+        transform-origin: left center;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .front:before {
+        position: absolute;
+        content: "";
+        border-left: 300px solid #f8ad9d;
+        border-top: 195px solid transparent;
+        left: -120px;
+        top: -95px;
+        width: 0;
+        height: 0;
+      }
+
+      .shadow {
+        position: absolute;
+        width: 330px;
+        height: 25px;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.05);
+        top: 210px;
+        left: -15px;
+        z-index: 1;
+        animation: shadow-scale 5s ease-in-out infinite;
+        filter: blur(5px);
+      }
+
+      @keyframes shadow-scale {
+        0%,
+        100% {
+          transform: scaleX(1);
+          opacity: 0.7;
+        }
+        50% {
+          transform: scaleX(0.85);
+          opacity: 0.9;
+        }
+      }
+
+      #cute-button {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: linear-gradient(135deg, #ff69b4, #ff1493);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        font-size: 20px;
+        font-weight: bold;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 5px 20px rgba(255, 105, 180, 0.6);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 100;
+        overflow: hidden;
+        position: relative;
+      }
+
+      #cute-button:hover {
+        transform: scale(1.05) translateY(-5px);
+        box-shadow: 0 10px 25px rgba(255, 105, 180, 0.8);
+      }
+
+      #cute-button:active {
+        transform: scale(0.95);
+      }
+
+      #cute-button:before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: rgba(255, 255, 255, 0.2);
+        transform: rotate(45deg);
+        animation: shine-button 3s infinite linear;
+      }
+
+      @keyframes shine-button {
+        0% {
+          transform: translateX(-100%) rotate(45deg);
+        }
+        100% {
+          transform: translateX(100%) rotate(45deg);
+        }
+      }
+
+      /* 3D effect when hovering */
+      .container:hover .valentines {
+        animation-play-state: paused;
+      }
+
+      .container:hover .card {
+        transform: translateY(-90px) rotateX(5deg);
+      }
+
+      .container:hover .front {
+        transform: rotateY(-160deg);
+      }
+
+      .container:hover .text {
+        transform: translateY(5px);
+      }
+
+      /* Special effects and decorations */
+      .decoration {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .decoration-heart {
+        position: absolute;
+        opacity: 0.15;
+        animation: rotate 30s linear infinite;
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Responsive design */
+      @media (max-width: 768px) {
+        .envelope {
+          width: 260px;
+          height: 180px;
+        }
+
+        .envelope:before {
+          width: 184px;
+          height: 184px;
+          top: -92px;
+          left: 38px;
+        }
+
+        .card {
+          width: 230px;
+          height: 150px;
+        }
+
+        .card:before {
+          width: 200px;
+          height: 120px;
+        }
+
+        .text {
+          font-size: 26px;
+          line-height: 24px;
+        }
+
+        .heart {
+          top: 95px;
+          left: 90px;
+        }
+
+        .front {
+          border-right: 150px solid #f4978e;
+          border-top: 85px solid transparent;
+          border-bottom: 90px solid transparent;
+          left: 110px;
+        }
+
+        .front:before {
+          border-left: 260px solid #f8ad9d;
+          border-top: 175px solid transparent;
+          left: -110px;
+          top: -85px;
+        }
+
+        .shadow {
+          width: 290px;
+          top: 190px;
+        }
+
+        #cute-button {
+          font-size: 16px;
+          padding: 12px 25px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .envelope {
+          width: 220px;
+          height: 150px;
+        }
+
+        .envelope:before {
+          width: 155px;
+          height: 155px;
+          top: -78px;
+          left: 32px;
+        }
+
+        .card {
+          width: 190px;
+          height: 130px;
+          top: 5px;
+          left: 15px;
+        }
+
+        .card:before {
+          width: 170px;
+          height: 100px;
+          left: 10px;
+          top: 10px;
+        }
+
+        .text {
+          font-size: 22px;
+          line-height: 20px;
+          top: 15px;
+        }
+
+        .heart {
+          height: 25px;
+          width: 25px;
+          top: 80px;
+          left: 75px;
+        }
+
+        .heart:before,
+        .heart:after {
+          height: 25px;
+          width: 25px;
+        }
+
+        .heart:before {
+          top: -12.5px;
+        }
+
+        .heart:after {
+          left: 12.5px;
+        }
+
+        .front {
+          border-right: 120px solid #f4978e;
+          border-top: 70px solid transparent;
+          border-bottom: 75px solid transparent;
+          left: 100px;
+        }
+
+        .front:before {
+          border-left: 220px solid #f8ad9d;
+          border-top: 145px solid transparent;
+          left: -100px;
+          top: -70px;
+        }
+
+        .shadow {
+          width: 250px;
+          top: 160px;
+          left: -15px;
+        }
+
+        #cute-button {
+          font-size: 14px;
+          padding: 10px 20px;
+          bottom: 20px;
+          right: 20px;
+        }
+      }
+    </style>
   </head>
-  <body>    
+  <body>
+    <div class="falling-hearts"></div>
+
+    <div class="decoration">
+      <div
+        class="decoration-heart"
+        style="top: 10%; left: 5%; font-size: 60px; opacity: 0.1"
+      >
+        ❤
+      </div>
+      <div
+        class="decoration-heart"
+        style="top: 20%; right: 10%; font-size: 80px; opacity: 0.12"
+      >
+        ❤
+      </div>
+      <div
+        class="decoration-heart"
+        style="bottom: 15%; left: 15%; font-size: 70px; opacity: 0.08"
+      >
+        ❤
+      </div>
+      <div
+        class="decoration-heart"
+        style="bottom: 25%; right: 20%; font-size: 55px; opacity: 0.1"
+      >
+        ❤
+      </div>
+    </div>
+
     <div class="container">
       <div class="valentines">
         <div class="envelope"></div>
         <div class="front"></div>
         <div class="card">
-            <div class="text">Chúc em yêu</br>Valentine</br>an lành!
+          <div class="sparkles"></div>
+          <div class="text">Chúc em yêu<br />Valentine<br />an lành!</div>
+          <div class="heart"></div>
         </div>
-        <div class="heart"></div>
+        <div class="hearts">
+          <div class="one"></div>
+          <div class="two"></div>
+          <div class="three"></div>
+          <div class="four"></div>
+          <div class="five"></div>
+        </div>
+        <div class="shadow"></div>
       </div>
-      <div class="hearts">
-        <div class="one"></div>
-        <div class="two"></div>
-        <div class="three"></div>
-        <div class="four"></div>
-        <div class="five"></div>
     </div>
-    <div class="shadow"></div>
-    </div>
-    <button id="cute-button">💖 Còn ở đây nữa nò !!! 💖</button>
-    
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="./script2.js"></script>
+
+    <button id="cute-button">
+      <span>💖 Còn ở đây nữa nò !!! 💖</span>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
-        document.getElementById("cute-button").addEventListener("click", function () {
-        window.location.href = "index3.html?play=true"; // Chuyển trang kèm tham số
-        });
+      // Tạo hiệu ứng trái tim rơi
+      function createFallingHearts() {
+        const fallingHearts = document.querySelector(".falling-hearts");
+        const heartCount = Math.floor(window.innerWidth / 40); // Số lượng trái tim phù hợp với kích thước màn hình
+
+        for (let i = 0; i < heartCount; i++) {
+          const heart = document.createElement("div");
+          heart.classList.add("falling-heart");
+
+          // Random size
+          const size = Math.random() * 8 + 5;
+          heart.style.width = `${size}px`;
+          heart.style.height = `${size}px`;
+
+          // Random position
+          heart.style.left = `${Math.random() * 100}%`;
+
+          // Random falling duration
+          const duration = Math.random() * 8 + 6;
+          heart.style.animationDuration = `${duration}s`;
+
+          // Random delay
+          heart.style.animationDelay = `${Math.random() * 5}s`;
+
+          // Random horizontal movement
+          const horizontalMovement = (Math.random() - 0.5) * 200;
+          heart.style.animationName = `fall-${i}`;
+
+          // Random color
+          const hue = Math.floor(Math.random() * 30) + 340; // Các màu đỏ, hồng
+          const saturation = Math.floor(Math.random() * 30) + 70;
+          const lightness = Math.floor(Math.random() * 20) + 50;
+          const alpha = Math.random() * 0.3 + 0.3;
+          const color = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+
+          heart.style.backgroundColor = color;
+
+          // Add the keyframe animation dynamically
+          const styleSheet = document.styleSheets[0];
+          const keyframes = `
+          @keyframes fall-${i} {
+            0% {
+              transform: translateY(-100px) translateX(0) rotate(-45deg) scale(${
+                size / 10
+              });
+              opacity: ${alpha};
+            }
+            100% {
+              transform: translateY(100vh) translateX(${horizontalMovement}px) rotate(-45deg) scale(${
+            size / 10
+          });
+              opacity: 0;
+            }
+          }
+        `;
+
+          // Add to style sheet
+          if (typeof styleSheet.insertRule === "function") {
+            styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
+          }
+
+          // Set heart before and after elements to match color
+          heart.style.setProperty("--heart-color", color);
+
+          fallingHearts.appendChild(heart);
+        }
+      }
+
+      // Tạo hiệu ứng lấp lánh trong thiệp
+      function createSparkles() {
+        const sparklesContainer = document.querySelector(".sparkles");
+        const sparkleCount = 20;
+
+        for (let i = 0; i < sparkleCount; i++) {
+          const sparkle = document.createElement("div");
+          sparkle.classList.add("sparkle");
+
+          // Random position
+          sparkle.style.left = `${Math.random() * 100}%`;
+          sparkle.style.top = `${Math.random() * 100}%`;
+
+          // Random size
+          const size = Math.random() * 3 + 1;
+          sparkle.style.width = `${size}px`;
+          sparkle.style.height = `${size}px`;
+
+          // Random animation duration and delay
+          sparkle.style.animationDuration = `${Math.random() * 2 + 1}s`;
+          sparkle.style.animationDelay = `${Math.random() * 2}s`;
+
+          // Random color
+          const colors = ["#FFD700", "#FFFFFF", "#FF69B4", "#FFA500"];
+          sparkle.style.backgroundColor =
+            colors[Math.floor(Math.random() * colors.length)];
+
+          sparklesContainer.appendChild(sparkle);
+        }
+      }
+
+      // Envelope interactive behavior
+      $(document).ready(function () {
+        // Tạo hiệu ứng khi page load
+        createFallingHearts();
+        createSparkles();
+
+        // Hiệu ứng hover cho phong bì
+        $(".container").hover(
+          function () {
+            $(".card").stop().animate(
+              {
+                top: "-90px",
+              },
+              500,
+              "easeOutBack"
+            );
+
+            $(".front")
+              .stop()
+              .css({
+                transition:
+                  "transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+              })
+              .css({
+                transform: "rotateY(-160deg)",
+              });
+          },
+          function () {
+            $(".card").stop().animate(
+              {
+                top: "5px",
+              },
+              400
+            );
+
+            $(".front")
+              .stop()
+              .css({
+                transition:
+                  "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+              })
+              .css({
+                transform: "rotateY(0deg)",
+              });
+          }
+        );
+
+        // Button chuyển trang với hiệu ứng nhấp nháy
+        $("#cute-button")
+          .on("mouseenter", function () {
+            $(this).addClass("pulse");
+          })
+          .on("mouseleave", function () {
+            $(this).removeClass("pulse");
+          })
+          .on("click", function () {
+            // Add bounce effect
+            $(this).addClass("clicked");
+            setTimeout(function () {
+              window.location.href = "index3.html?play=true";
+            }, 300);
+          });
+      });
+
+      // Thêm hiệu ứng jQuery easeOutBack nếu chưa có
+      $.easing.easeOutBack = function (x, t, b, c, d, s) {
+        if (s == undefined) s = 1.70158;
+        return c * ((t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
+      };
+
+      // Thay đổi kích thước hiệu ứng khi thay đổi kích thước trình duyệt
+      window.addEventListener("resize", function () {
+        const fallingHearts = document.querySelector(".falling-hearts");
+        fallingHearts.innerHTML = "";
+        createFallingHearts();
+      });
     </script>
   </body>
 </html>
